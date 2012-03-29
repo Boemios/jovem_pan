@@ -1,0 +1,39 @@
+- Employees
+  > id
+  > name
+  > position
+
+- Companies
+  > id
+  > type
+  > social_name
+  > fantasy_name
+
+- Sell_types
+  > id
+  > code
+  > description
+
+- Selles
+  > id
+  > sell_type_id
+  > dicount_percentage
+  > liquid_value
+  > invoice_total
+
+- Contract
+  > id
+  > company_id
+  > date
+  > contract_code
+  > sell_auth_code
+
+- Contract_employess
+  > id
+  > contract_id
+  > employee_id
+
+- Contract_company
+  > id
+  > contract_id
+  > company_id
