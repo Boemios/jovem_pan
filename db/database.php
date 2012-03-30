@@ -22,7 +22,10 @@ class Database {
     $this->password = $password;
     $this->database = $database;
 
+    echo("aqui....\n");
+
     if($this->check_database_existance()) {
+      echo("passou...\n");
       $this->connection = $this->connect();
     } else {
       die("It was not possible to connect to the database. Check log file to more information.");
@@ -59,6 +62,7 @@ class Database {
 
     if(mysql_affected_rows($result)) {
       mysql_close($connect);
+      echo("existe...\n");
       return TRUE;
     } else{
       if($this->create_database($connect)){

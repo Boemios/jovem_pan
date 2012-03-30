@@ -20,7 +20,7 @@ class CreateTables {
    * used to trigger other methods that will help user to manage database creations and       *
    * deletions.                                                                               */
   function __construct() {
-    $this->db   = new Database("localhost", "root", "", "jovempan");
+    $this->db   = new Database("localhost", "root", "mab01@061089", "jovempan");
     $this->conn = $this->db->connection;
     $this->stmt = $this->conn->stmt_init();
 
