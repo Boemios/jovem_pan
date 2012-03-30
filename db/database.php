@@ -57,7 +57,7 @@ class Database {
       $this->database);
     $result = mysql_query($query);
 
-    if($result) {
+    if(mysql_affected_rows($result)) {
       mysql_close($connect);
       return TRUE;
     } else{
