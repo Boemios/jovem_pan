@@ -20,7 +20,7 @@ class CreateTables {
    * used to trigger other methods that will help user to manage database creations and       *
    * deletions.                                                                               */
   function __construct() {
-    $this->db   = new Database("DB_HOSTNAME", "DB_USERNAME", "DB_PASSWORD", "jovempan");
+    $this->db   = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
     $this->conn = $this->db->connection;
     $this->stmt = $this->conn->stmt_init();
 
@@ -100,6 +100,14 @@ class CreateTables {
     $query = "CREATE TABLE employee (id INT NOT NULL AUTO_INCREMENT,";
     $query .= " name VARCHAR(128) NOT NULL, position VARCHAR(128) NOT NULL,";
     $query .= " PRIMARY KEY(id));";
+
+    return $query;
+  }
+
+  private function query_for_company() {
+    $query = "CREATE TABLE company (id INT NOT NULL AUTO_INCREMENT,";
+    $query .= "type INT NOT NULL, social_name VARCHAR(128) NOT NULL,";
+    $query .= "fantasy_name VARCHAR(128) NOT NULL, PRIMARY KEY(id))";
 
     return $query;
   }
