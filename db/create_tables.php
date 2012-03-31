@@ -8,9 +8,9 @@
  *********************************************************************************************/
 
 include("database.php");
+require_once("conf.php");
 
 class CreateTables {
-
   public $db;          // Database instance.
   public $conn;        // Connection to the database, catch from db instance.
   public $stmt;        // Query API to use in complex queries over the database.
@@ -20,7 +20,7 @@ class CreateTables {
    * used to trigger other methods that will help user to manage database creations and       *
    * deletions.                                                                               */
   function __construct() {
-    $this->db   = new Database("localhost", "root", "mab01@061089", "jovempan");
+    $this->db   = new Database("DB_HOSTNAME", "DB_USERNAME", "DB_PASSWORD", "jovempan");
     $this->conn = $this->db->connection;
     $this->stmt = $this->conn->stmt_init();
 
