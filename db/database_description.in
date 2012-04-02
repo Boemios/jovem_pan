@@ -1,0 +1,5 @@
+- Employees
+  > id INT PK
+  > name VARCHAR(128)
+  > position VARCHAR(128)
+
