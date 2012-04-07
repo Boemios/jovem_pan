@@ -11,26 +11,44 @@ include("database.php");
 require_once("conf.php");
 
 class CreateTables {
-  public $db;          // Database instance.
-  public $conn;        // Connection to the database, catch from db instance.
-  public $stmt;        // Query API to use in complex queries over the database.
+  public  $db;          // Database instance.
+  public  $conn;        // Connection to the database, catch from db instance.
+  public  $stmt;        // Query API to use in complex queries over the database.
+  private $tables;      // Array that will hold all tables names.
 
   /* Class contructor, ir just instantiate database class and defines an STDIN if it is not   *
    * alerady defined. It does not receive any parameter, and returns nothing. The method is   *
    * used to trigger other methods that will help user to manage database creations and       *
    * deletions.                                                                               */
   function __construct() {
-    $this->db   = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
-    $this->conn = $this->db->connection;
-    $this->stmt = $this->conn->stmt_init();
+    $this->db     = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
+    $this->conn   = $this->db->connection;
+    $this->stmt   = $this->conn->stmt_init();
+    $this->tables = array('employees', 'companies', 'sell_types', 'selles', 'contracts',
+                          'contracts_employees');
 
     if(!defined("STDIN")) {
       define("STDIN", fopen('php://stdin', 'r'));
     }
 
     if($_SERVER["argc"] == 3) {
+
       if($_SERVER["argv"][1] == "create") {
-        $this->create($_SERVER["argv"][2]);
+        if($_SERVER["argv"][2] == 'all') {
+          foreach($this->tables as $t) {
+            $this->create($t);
+          }
+        } else {
+          $this->create($_SERVER["argv"][2]);
+        }
+      } else if($_SERVER["argv"][1] == "remove") {
+        if($_SERVER["argv"][2] == 'all') {
+          foreach($this->tables as $t) {
+            $this->drop($t);
+          }
+        } else {
+          $this->drop($_SERVER["argv"][2]);
+        }
       }
     }
   }
@@ -61,10 +79,12 @@ class CreateTables {
    * script and generate comprehensive information about what was wrong.                      */
   private function drop($table) {
     $query = sprintf("DROP TABLE %s;", $table);
-    if($this->conn->query($query) === TRUE)
+    if($this->conn->query($query) === TRUE) {
+      printf("Tabela %s removida com sucesso!\n", $table);
       return 1;
-    else
+    } else {
       die("Erro na exclusão da tabela " . $table . ".\n" . $this->conn->error . "\n");
+    }
   }
 
   /* This method verifies if a table exists or no. It seraches for a table name like the      *
@@ -96,22 +116,58 @@ class CreateTables {
    * the table name that it describes as a suffix, preceded by "query_for_". It all does not  *
    * have any parameter, and all returns a string as query to bem processed.                  */
 
-  private function query_for_employee() {
-    $query = "CREATE TABLE employee (id INT NOT NULL AUTO_INCREMENT,";
+  private function query_for_employees() {
+    $query = "CREATE TABLE employees (id INT NOT NULL AUTO_INCREMENT,";
     $query .= " name VARCHAR(128) NOT NULL, position VARCHAR(128) NOT NULL,";
     $query .= " PRIMARY KEY(id));";
 
     return $query;
   }
 
-  private function query_for_company() {
-    $query = "CREATE TABLE company (id INT NOT NULL AUTO_INCREMENT,";
+  private function query_for_companies() {
+    $query = "CREATE TABLE companies (id INT NOT NULL AUTO_INCREMENT,";
     $query .= "type INT NOT NULL, social_name VARCHAR(128) NOT NULL,";
     $query .= "fantasy_name VARCHAR(128) NOT NULL, PRIMARY KEY(id))";
 
     return $query;
   }
 
+  private function query_for_sell_types() {
+    $query = "CREATE TABLE sell_types (id INT NOT NULL AUTO_INCREMENT,";
+    $query .= "code VARCHAR(32) NOT NULL, description TINYTEXT NULL, PRIMARY KEY(id))";
+
+    return $query;
+  }
+
+  private function query_for_selles() {
+    $query = "create table selles (id INT NOT NULL AUTO_INCREMENT,";
+    $query .= " sell_type_id INT NOT NULL, discount_percentage DECIMAL(10, 4) NULL,";
+    $query .= " liquid_value DECIMAL(10, 4) NULL, invoice_total DECIMAL(10, 4) NULL,";
+    $query .= " PRIMARY KEY(id), FOREIGN KEY(sell_type_id) REFERENCES sell_types(id) ON";
+    $query .= " UPDATE CASCADE ON DELETE SET NULL);";
+
+    return $query;
+  }
+
+  private function query_for_contracts() {
+    $query = "create table contracts (id INT NOT NULL AUTO_INCREMENT,";
+    $query .= " company_id INT NOT NULL, date DATE NOT NULL,";
+    $query .= " contract_code VARCHAR(32) NOT NULL, sell_auth_code VARCHAR(32) NOT NULL,";
+    $query .= " PRIMARY KEY(id), FOREIGN KEY(company_id) REFERENCES companies(id) ON";
+    $query .= " UPDATE CASCADE ON DELETE RESTRICT);";
+
+    return $query;
+  }
+
+  private function query_for_contracts_employees() {
+    $query = "create table contracts_employees (id INT NOT NULL AUTO_INCREMENT,";
+    $query .= " contract_id INT NOT NULL, employee_id INT NOT NULL,";
+    $query .= " PRIMARY KEY(id), FOREIGN KEY(contract_id) REFERENCES contracts(id) ON";
+    $query .= " UPDATE CASCADE ON DELETE RESTRICT, FOREIGN KEY(employee_id) REFERENCES";
+    $query .= " employees(id) ON UPDATE CASCADE ON DELETE RESTRICT);";
+
+    return $query;
+  }
 }
 
 $create_tables = new CreateTables();
