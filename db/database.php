@@ -9,6 +9,7 @@ class Database {
 
   public  $connection;   // Variable that holds the connection with database, is a Mysqli object.
   public  $database;     // Database name
+  public  $stmt;         // Mysqli Stmt instance, used to construct and execute queries.
   private $host;         // Host name (e.g. 'localhost', 'db.domain.example', ...).
   private $user;         // User name of database (e.g. 'root').
   private $password;     // Password of the user in the database.
@@ -27,6 +28,7 @@ class Database {
     } else {
       die("It was not possible to connect to the database. Check log file to more information.");
     }
+    $this->stmt = $this->connection->stmt_init();
   }
 
   /* Class destructor. Just close the database connection. it has no parameters and returns   *

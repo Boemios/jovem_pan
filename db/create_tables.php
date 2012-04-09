@@ -13,7 +13,6 @@ require_once("conf.php");
 class CreateTables {
   public  $db;          // Database instance.
   public  $conn;        // Connection to the database, catch from db instance.
-  public  $stmt;        // Query API to use in complex queries over the database.
   private $tables;      // Array that will hold all tables names.
 
   /* Class contructor, ir just instantiate database class and defines an STDIN if it is not   *
@@ -23,7 +22,6 @@ class CreateTables {
   function __construct() {
     $this->db     = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
     $this->conn   = $this->db->connection;
-    $this->stmt   = $this->conn->stmt_init();
     $this->tables = array('employees', 'companies', 'sell_types', 'selles', 'contracts',
                           'contracts_employees');
 
@@ -118,7 +116,7 @@ class CreateTables {
 
   private function query_for_employees() {
     $query = "CREATE TABLE employees (id INT NOT NULL AUTO_INCREMENT,";
-    $query .= " name VARCHAR(128) NOT NULL, position VARCHAR(128) NOT NULL,";
+    $query .= " name VARCHAR(128) NOT NULL, position INT NOT NULL,";
     $query .= " PRIMARY KEY(id));";
 
     return $query;
