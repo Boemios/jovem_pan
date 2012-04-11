@@ -23,7 +23,7 @@ class CreateTables {
     $this->db     = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
     $this->conn   = $this->db->connection;
     $this->tables = array('employees', 'companies', 'sell_types', 'selles', 'contracts',
-                          'contracts_employees');
+                          'contracts_employees', 'goals');
 
     if(!defined("STDIN")) {
       define("STDIN", fopen('php://stdin', 'r'));
@@ -163,6 +163,17 @@ class CreateTables {
     $query .= " PRIMARY KEY(id), FOREIGN KEY(contract_id) REFERENCES contracts(id) ON";
     $query .= " UPDATE CASCADE ON DELETE RESTRICT, FOREIGN KEY(employee_id) REFERENCES";
     $query .= " employees(id) ON UPDATE CASCADE ON DELETE RESTRICT);";
+
+    return $query;
+  }
+
+  private function query_for_goals(){
+    $query = "create table goals (id INT NOT NULL AUTO_INCREMENT,";
+    $query .= "goal_value DECIMAL(10, 4) NOT NULL,";
+    $query .= "goal_maturity_date DATETIME NOT NULL,";
+    $query .= "PRIMARY KEY(id))";
+
+    echo $query;
 
     return $query;
   }
