@@ -8,7 +8,7 @@ function save($post, $database) {
     $post['position']);
   if($database->stmt->execute()) {
     // This is not nice, we shuld do it using http.
-    header('Location: employees.php');
+    header('Location: ../layouts/employees.php');
   } else {
     printf("Ocorreu um erro na inclusão do registro.");
   }
@@ -30,10 +30,12 @@ function search($post, $database) {
 function select_action() {
   $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
 
-  if($_POST['action'] == 'create') {
-    save($_POST, $database);
-  } else if(!$_POST['action']) {
+  if(!array_key_exists('action', $_POST)) {
     return(search($_POST, $database));
+  } else {
+    if($_POST['action'] == 'create') {
+      save($_POST, $database);
+    }
   }
 }
 
@@ -45,4 +47,6 @@ function code_to_position($code) {
   else
     return "Executivo de vendas";
 }
+
+select_action();
 ?>
