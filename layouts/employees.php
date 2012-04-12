@@ -13,15 +13,19 @@
   <h3>Colaborador</h3>
   <table>
     <tr>
-      <td width="400px">
+      <td width="300px">
         Nome
       </td>
-      <td width="400px">
+      <td width="300px">
         Cargo
+      </td>
+      <td width="300px">
+      </td>
+      <td width="300px">
       </td>
     </tr>
     <?php
-      foreach(select_action() as $register) {
+      foreach(select_action(NULL) as $register) {
     ?>
     <tr>
       <td>
@@ -33,6 +37,15 @@
         <?php
           echo(code_to_position($register['position']));
         ?>
+      </td>
+      <td>
+        <?php
+          $encoded = encode('edit', $register['id']);
+          echo("<a href=../controllers/employees.php?a=$encoded>Editar</a>");
+        ?>
+      </td>
+      <td>
+        <a href="../controllers.php">Excluir</a>
       </td>
     </tr>
     <?php } ?>

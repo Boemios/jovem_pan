@@ -14,6 +14,11 @@ function save($post, $database) {
   }
 }
 
+function edit($id) {
+  echo("Oi $id");
+
+}
+
 function search($post, $database) {
   $records = array();
   $query = sprintf("SELECT * FROM employees");
@@ -27,14 +32,16 @@ function search($post, $database) {
   return $records;
 }
 
-function select_action() {
+function select_action($method) {
   $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
 
-  if(!array_key_exists('action', $_POST)) {
-    return(search($_POST, $database));
+  if($method == NULL) {
+    return(search($method, $database));
+  } else if(array_key_exists('a', $method)) {
+    decode($method['a']);
   } else {
-    if($_POST['action'] == 'create') {
-      save($_POST, $database);
+    if($method['action'] == 'create') {
+      save($method, $database);
     }
   }
 }
@@ -48,5 +55,23 @@ function code_to_position($code) {
     return "Executivo de vendas";
 }
 
-select_action();
+function encode($arg_action, $id) {
+  $str = $arg_action . " " . $id;
+  return(base64_encode($str));
+}
+
+function decode($action) {
+  $str = base64_decode($action);
+  $opt = explode(" ", $str);
+
+  if($opt[0] == 'edit') {
+    edit($opt[1]);
+  }
+}
+
+if(array_key_exists('a', $_GET)) {
+  select_action($_GET);
+} else {
+  select_action($_POST);
+}
 ?>
