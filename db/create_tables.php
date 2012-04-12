@@ -173,8 +173,6 @@ class CreateTables {
     $query .= "goal_maturity_date DATETIME NOT NULL,";
     $query .= "PRIMARY KEY(id))";
 
-    echo $query;
-
     return $query;
   }
 }
