@@ -23,7 +23,7 @@
       </tr>
       <tr>
         <td>
-          <label for="Date">Data de vigência * :</label>
+          <label for="date">Data de vigência * :</label>
         </td>
 	<td>
 	  <input type="text" id="date" name="date" size="50" />

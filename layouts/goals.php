@@ -10,14 +10,14 @@
 </head>
 
 <body>
-  <h3>Cadastor de metas</h3>
+  <h3>Cadastro de metas</h3>
   <table>
     <tr>
       <td width="300px">
-        Nome
+        Valor(R$)
       </td>
       <td width="300px">
-        Cargo
+        Mês de referência
       </td>
       <td width="300px">
       </td>
@@ -29,13 +29,14 @@
     ?>
     <tr>
       <td>
-        <?php
-          echo($register['name']);
-        ?>
-      </td>
+	<?php
+	  /*echo($register['goal_value']);*/
+	  printf("%1\$.2f", $register['goal_value']);
+	?>
+      <td>
       <td>
         <?php
-          echo(code_to_position($register['position']));
+          echo($register['goal_maturity_date']);
         ?>
       </td>
       <td>
