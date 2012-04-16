@@ -46,7 +46,10 @@
         ?>
       </td>
       <td>
-        <a href="../controllers.php">Excluir</a>
+	<?php
+	  $encoded = encode('delete', $register['id']);
+          echo("<a href=../controllers/goals.php?a=$encoded>Excluir</a>");
+        ?>
       </td>
     </tr>
     <?php } ?>

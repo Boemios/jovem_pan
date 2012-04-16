@@ -3,16 +3,10 @@ include('../db/database.php');
 require_once('../db/conf.php');
 
 function save($post, $database) {
-  openlog(LOG_PID | LOG_LOCAL0, "pansystem");
   $database->stmt->prepare("INSERT INTO goals (goal_value, goal_maturity_date) VALUES (?, ?)");
-
-  $adate = explode("/", $post['date']);
-  $month = $adate[0];
-  $year = $adate[1];
 
   $date = new DateTime(date('Y-m-d', $post['date']));
 
-  /*syslog(LOG_INFO, "[DEBUG] Data de refência: " . $date);*/
 
   $database->stmt->bind_param('si', $database->connection->real_escape_string($post['value']), $date);
   
@@ -24,9 +18,20 @@ function save($post, $database) {
   }
 }
 
-function edit($id) {
+function edit($id, $database) {
   echo("Oi $id");
 
+}
+
+function remove($id, $database){
+ $database->stmt->prepare("DELETE FROM goals WHERE id = ?");
+ $database->stmt->bind_param('i', $id);
+
+ if($database->stmt->execute()){
+   header('Location: ../layouts/goals.php');
+ }else{
+   printf("Ocorreu um erro na exclusão do registro.");
+ }
 }
 
 function search($post, $database) {
@@ -48,7 +53,9 @@ function select_action($method) {
   if($method == NULL) {
     return(search($method, $database));
   } else if(array_key_exists('a', $method)) {
-    decode($method['a']);
+    decode($method['a'], $database);
+  } else if(array_key_exists('delete', $method)){
+    decode($method['delete'], $database);
   } else {
     if($method['action'] == 'create') {
       save($method, $database);
@@ -61,12 +68,14 @@ function encode($arg_action, $id) {
   return(base64_encode($str));
 }
 
-function decode($action) {
+function decode($action, $database) {
   $str = base64_decode($action);
   $opt = explode(" ", $str);
 
   if($opt[0] == 'edit') {
-    edit($opt[1]);
+    edit($opt[1], $database);
+  }else if($opt[0]){
+    remove($opt[1], $database);
   }
 }
 
