@@ -5,7 +5,7 @@
 
 - Companies
   > id
-  > type
+  > type [CL - Cliente ; AG - Agência ; AB - Ambos]
   > social_name
   > fantasy_name
 
