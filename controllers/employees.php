@@ -2,7 +2,9 @@
 include('../db/database.php');
 require_once('../db/conf.php');
 
-function save($post, $database) {
+function save($post) {
+  global $database;
+
   $database->stmt->prepare("INSERT INTO employees (name, position) VALUES (?, ?)");
   $database->stmt->bind_param('si', $database->connection->real_escape_string($post['name']),
     $post['position']);
@@ -14,13 +16,35 @@ function save($post, $database) {
   }
 }
 
-function edit($id, $database) {
+function recover_to_edit($id) {
+  global $database;
   $argv['id'] = $id;
-  $records = search($database, $argv);
-  print_r($records);
+  $records = search($argv);
+
+  if(sizeof($records == 1)) {
+    return $records[0];
+  } else {
+    die("A consulta deveria retornar um único resutado mas retornou mais ou menos do que isso.");
+  }
 }
 
-function search($database, $argv = false) {
+function update($post) {
+  global $database;
+
+  $database->stmt->prepare("UPDATE employees SET name=?, position=? WHERE id=?");
+  $database->stmt->bind_param('sii', $database->connection->real_escape_string($post['name']),
+    $post['position'], $post['id']);
+  if($database->stmt->execute()) {
+    // This is not nice, we shuld do it using http.
+    header('Location: ../layouts/employees.php');
+  } else {
+    printf("Ocorreu um erro na edição do registro.");
+  }
+
+}
+
+function search($argv = false) {
+  global $database;
   $records = array();
   $query = sprintf("SELECT * FROM employees");
 
@@ -44,16 +68,14 @@ function search($database, $argv = false) {
 }
 
 function select_action($method) {
-  $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
+  global $database;
 
   if($method == NULL) {
-    return(search($method, $database));
-  } else if(array_key_exists('a', $method)) {
-    decode($method['a'], $database);
-  } else {
-    if($method['action'] == 'create') {
-      save($method, $database);
-    }
+    return(search());
+  } elseif($method['action'] == 'create') {
+    save($method);
+  } elseif($method['action'] == 'edit') {
+    update($method);
   }
 }
 
@@ -71,14 +93,14 @@ function encode($arg_action, $id) {
   return(base64_encode($str));
 }
 
-function decode($action, $database) {
+function decode($action) {
   $str = base64_decode($action);
   $opt = explode(" ", $str);
 
-  if($opt[0] == 'edit') {
-    edit($opt[1], $database);
-  }
+  return $opt;
 }
+
+$database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
 
 if(array_key_exists('a', $_GET)) {
   select_action($_GET);

@@ -41,7 +41,7 @@
       <td>
         <?php
           $encoded = encode('edit', $register['id']);
-          echo("<a href=../controllers/employees.php?a=$encoded>Editar</a>");
+          echo("<a href=employees_form.php?a=$encoded>Editar</a>");
         ?>
       </td>
       <td>
