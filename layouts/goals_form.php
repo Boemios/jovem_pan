@@ -4,6 +4,13 @@
 <head>
   <title>Jovem Pan - Cadastro de metas</title>
   <meta charset="UTF-8" />
+
+<script type="text/javascript">
+    function clear(id) {
+      document.getElementById(id).value="";
+    }
+  </script>
+
 </head>
 
 <body>
@@ -23,10 +30,10 @@
       </tr>
       <tr>
         <td>
-          <label for="date">Data de vigência * :</label>
+          <label for="valid_date">Data de vigência * :</label>
         </td>
 	<td>
-	  <input type="text" id="date" name="date" size="50" />
+          <input type="text" name="valid_date" size="50" />
       </tr>
       <tr>
         <td colspan="2">

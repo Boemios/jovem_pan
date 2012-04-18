@@ -169,8 +169,8 @@ class CreateTables {
 
   private function query_for_goals(){
     $query = "create table goals (id INT NOT NULL AUTO_INCREMENT,";
-    $query .= "goal_value DECIMAL(10, 4) NOT NULL,";
-    $query .= "goal_maturity_date DATETIME NOT NULL,";
+    $query .= "value DECIMAL(10, 4) NOT NULL,";
+    $query .= "valid_date DATE NOT NULL,";
     $query .= "PRIMARY KEY(id))";
 
     return $query;

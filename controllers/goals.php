@@ -3,13 +3,12 @@ include('../db/database.php');
 require_once('../db/conf.php');
 
 function save($post, $database) {
-  $database->stmt->prepare("INSERT INTO goals (goal_value, goal_maturity_date) VALUES (?, ?)");
+  $database->stmt->prepare("INSERT INTO goals (value, valid_date) VALUES (?, ?)");
+  $date = date_format(date_create_from_format('d/m/Y', $post['valid_date']), 'Y-m-d');
+  $value = (double)str_replace(",", ".",
+      $database->connection->real_escape_string($post['value']));
+  $database->stmt->bind_param('ds', $value, $date);
 
-  $date = new DateTime(date('Y-m-d', $post['date']));
-
-
-  $database->stmt->bind_param('si', $database->connection->real_escape_string($post['value']), $date);
-  
   if($database->stmt->execute()) {
     // This is not nice, we shuld do it using http.
     header('Location: ../layouts/goals.php');

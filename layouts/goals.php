@@ -17,7 +17,7 @@
         Valor(R$)
       </td>
       <td width="300px">
-        Mês de referência
+        Data de referência
       </td>
       <td width="300px">
       </td>
@@ -30,13 +30,12 @@
     <tr>
       <td>
 	<?php
-	  /*echo($register['goal_value']);*/
-	  printf("%1\$.2f", $register['goal_value']);
+	  printf("%1\$.2f", $register['value']);
 	?>
-      <td>
+      </td>
       <td>
         <?php
-          echo($register['goal_maturity_date']);
+          echo(date_format(date_create_from_format('Y-m-d', $register['valid_date']), 'd/m/Y'));
         ?>
       </td>
       <td>
