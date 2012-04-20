@@ -25,7 +25,10 @@
       </td>
     </tr>
     <?php
-      foreach(select_action(NULL) as $register) {
+      if(sizeof(select_action(NULL)) == 0) {
+        echo("<tr><td colspan=4>Nenhum registro encontrado.</td></tr>");
+      } else {
+        foreach(select_action(NULL) as $register) {
     ?>
     <tr>
       <td>
@@ -45,10 +48,10 @@
         ?>
       </td>
       <td>
-        <a href="../controllers.php">Excluir</a>
+        <a href="../controllers/employees.php">Excluir</a>
       </td>
     </tr>
-    <?php } ?>
+    <?php } } ?>
   </table>
 
   <p><a href="../index.php">Voltar</a></p>

@@ -31,7 +31,7 @@
 	<?php
 	  echo($register['type']);
 	?>
-      <td>
+      </td>
       <td>
         <?php
           echo($register['social_name']);

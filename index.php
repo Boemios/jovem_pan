@@ -13,7 +13,7 @@
 
   <a href="layouts/employees.php">Colaboradores</a><br />
   <a href="layouts/companies.php">Entidades</a><br />
-  <a href="layouts/tiposdevenda.php">Tipos de venda</a><br />
+  <a href="layouts/sell_types.php">Tipos de venda</a><br />
   <a href="layouts/contratos.php">Contratos</a><br />
   <a href="layouts/goals.php">Metas</a><br />
 </body>
