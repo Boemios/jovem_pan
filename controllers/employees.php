@@ -28,7 +28,7 @@ function recover_to_edit($id) {
   }
 }
 
-function update($post) {
+function edit($post) {
   global $database;
 
   $database->stmt->prepare("UPDATE employees SET name=?, position=? WHERE id=?");
@@ -67,7 +67,7 @@ function search($argv = false) {
   return $records;
 }
 
-function remove($id, $database) {
+function remove($id) {
   global $database;
 
   $database->stmt->prepare("DELETE FROM employees WHERE id = ?");
@@ -84,13 +84,15 @@ function select_action($method) {
   if($method == NULL) {
     return(search($method));
   } else if(array_key_exists('a', $method)) {
-    decode($method['a']);
-  } else if(array_key_exists('delete', $method)){
-    decode($method['delete']);
-  } else {
-    if($method['action'] == 'create') {
-      save($method);
+    $opt = decode($method['a']);
+
+    if($opt[0] == 'delete') {
+      remove($opt[1]);
     }
+  } else if($method['action'] == 'create') {
+    save($method);
+  } else if($method['action'] == 'edit') {
+    edit($method);
   }
 }
 
@@ -112,11 +114,7 @@ function decode($action) {
   $str = base64_decode($action);
   $opt = explode(" ", $str);
 
-  if($opt[0] == 'edit') {
-    edit($opt[1]);
-  }else if($opt[0]){
-    remove($opt[1]);
-  }
+  return $opt;
 }
 
 $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
