@@ -67,15 +67,30 @@ function search($argv = false) {
   return $records;
 }
 
-function select_action($method) {
+function remove($id, $database) {
   global $database;
 
+  $database->stmt->prepare("DELETE FROM employees WHERE id = ?");
+  $database->stmt->bind_param('i', $id);
+
+  if($database->stmt->execute()) {
+    header('Location: ../layouts/employees.php');
+  } else {
+    printf("Ocorreu um erro na exclusão do registro.");
+  }
+}
+
+function select_action($method) {
   if($method == NULL) {
-    return(search());
-  } elseif($method['action'] == 'create') {
-    save($method);
-  } elseif($method['action'] == 'edit') {
-    update($method);
+    return(search($method));
+  } else if(array_key_exists('a', $method)) {
+    decode($method['a']);
+  } else if(array_key_exists('delete', $method)){
+    decode($method['delete']);
+  } else {
+    if($method['action'] == 'create') {
+      save($method);
+    }
   }
 }
 
@@ -97,7 +112,11 @@ function decode($action) {
   $str = base64_decode($action);
   $opt = explode(" ", $str);
 
-  return $opt;
+  if($opt[0] == 'edit') {
+    edit($opt[1]);
+  }else if($opt[0]){
+    remove($opt[1]);
+  }
 }
 
 $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");

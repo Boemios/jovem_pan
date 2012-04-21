@@ -48,7 +48,10 @@
         ?>
       </td>
       <td>
-        <a href="../controllers/employees.php">Excluir</a>
+	<?php
+	  $encoded = encode('delete', $register['id']);
+          echo("<a href=../controllers/employees.php?a=$encoded>Excluir</a>");
+        ?>
       </td>
     </tr>
     <?php } } ?>
