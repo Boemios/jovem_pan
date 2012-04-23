@@ -13,7 +13,8 @@ class Database {
   private $host;         // Host name (e.g. 'localhost', 'db.domain.example', ...).
   private $user;         // User name of database (e.g. 'root').
   private $password;     // Password of the user in the database.
-
+  private $query;        // Query to be executed by database class
+  
   /* Constructor for Database class. Set the variables class values and tries to start a      *
    * connection qith the database, based on the recently setted values. It receives as        *
    * parameters the host, user, password and database name to connect. Returns nothing.       */
@@ -81,6 +82,48 @@ class Database {
     $result = mysql_query("CREATE DATABASE " . $this->database . ";", $connection);
 
     return($result);
+  }
+  
+  /* Method that create and execute queries by receiving a value mapping and the type of
+   * requested query. Returns the result set of requested query */
+  public function execute_query($type, $mapping){
+    $query = prepare_query($type, $mapping);
+
+  }
+
+  private function create_query($type, $mapping, $pkfield){
+    switch($type){
+      case 'I':
+        $sql = "INSERT INTO <table> VALUES <value>";
+        break;
+      case 'S':
+        $sql = "SELECT <fields> FROM <table> <search>";
+        break;
+      case 'D':
+        $sql = "DELETE FROM <table> WHERE <pkfield> = <value>";
+        break;
+      default:
+        die("Query type not specified or a wrong value has been specified");
+    }
+    
+    $sql = mapping_interpreter($mapping, $sql, $pkfield);
+  
+  }
+
+  private function mapping_interpreter($mapping, $sql, $pkfield){
+   $sql = str_replace("<pkfield>", $pkfield, $sql);
+   foreach ($mapping as $key => $value){
+    switch ($key){
+      case 'TABLE':
+        $sql = str_replace("<table>", $value, $sql);
+        break;
+      case 'FIELD':
+        break;
+      case 'PK':
+        $sql = str_replace("<pkfield>", $value, $sql);
+        break;
+    }
+   }
   }
 }
 
