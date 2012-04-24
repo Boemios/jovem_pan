@@ -1,5 +1,5 @@
 <?php
-  include('../controllers/employees.php');
+include('../controllers/employees.php');
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,14 +43,14 @@
       </td>
       <td>
         <?php
-          $encoded = encode('edit', $register['id']);
-          echo("<a href=employees_form.php?a=$encoded>Editar</a>");
+          $encoded = encode($register['id']);
+          echo("<a href=employees_form.php?edit=$encoded>Editar</a>");
         ?>
       </td>
       <td>
 	<?php
-	  $encoded = encode('delete', $register['id']);
-          echo("<a href=../controllers/employees.php?a=$encoded>Excluir</a>");
+	  $encoded = encode($register['id']);
+          echo("<a href=../controllers/employees.php?delete=$encoded>Excluir</a>");
         ?>
       </td>
     </tr>

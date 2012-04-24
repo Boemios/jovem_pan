@@ -1,15 +1,14 @@
 <?php
 include("../controllers/employees.php");
 
-if(array_key_exists('a', $_GET)) {
-  $args = decode($_GET['a']);
-  if($args[0] == 'edit') {
-    $records = recover_to_edit($args[1]);
-    $edit = 1;
-  } else {
-    $edit = 0;
-  }
+if($_GET['edit']) {
+  $params['id'] = decode($_GET['edit']);
+  $records = search($params);
+  $edit = 1;
+} else {
+  $edit = 0;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +27,7 @@ if(array_key_exists('a', $_GET)) {
     <?php
       if($edit) {
         echo("<input type='hidden' id='action' name='action' value='edit' />");
-        echo("<input type='hidden' id='id' name='id' value='" . $records['id'] . "' />");
+        echo("<input type='hidden' id='id' name='id' value='" . $records[0]['id'] . "' />");
       } else {
         echo("<input type='hidden' id='action' name='action' value='create' />");
       }
@@ -42,7 +41,7 @@ if(array_key_exists('a', $_GET)) {
           <?php
             if($edit)
               echo("<input type='text' id='name' name='name' size='50'
-                value='" . $records['name'] . "' />");
+                value='" . $records[0]['name'] . "' />");
             else
               echo('<input type="text" id="name" name="name" size="50" />');
           ?>
@@ -55,13 +54,13 @@ if(array_key_exists('a', $_GET)) {
         <td>
           <select id="position" name="position">
             <option value="">-- Selecione um cargo --</option>
-            <option value="0"<?= ($records['position'] == 0 ? ' selected': '')?>>
+            <option value="0"<?= ($records[0]['position'] == 0 ? ' selected': '')?>>
               Gerente Corporativo
             </option>
-            <option value="1"<?= ($records['position'] == 1 ? ' selected': '')?>>
+            <option value="1"<?= ($records[0]['position'] == 1 ? ' selected': '')?>>
               Gerente / Supervisor Comercial
             </option>
-            <option value="2"<?= ($records['position'] == 2 ? ' selected': '')?>>
+            <option value="2"<?= ($records[0]['position'] == 2 ? ' selected': '')?>>
               Executivo de vendas
             </option>
           </select>

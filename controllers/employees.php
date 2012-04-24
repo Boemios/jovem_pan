@@ -22,7 +22,7 @@ function recover_to_edit($id) {
   $records = search($argv);
 
   if(sizeof($records == 1)) {
-    return $records[0];
+    header("Location: ../layouts/employees_form.php");
   } else {
     die("A consulta deveria retornar um único resutado mas retornou mais ou menos do que isso.");
   }
@@ -83,12 +83,6 @@ function remove($id) {
 function select_action($method) {
   if($method == NULL) {
     return(search($method));
-  } else if(array_key_exists('a', $method)) {
-    $opt = decode($method['a']);
-
-    if($opt[0] == 'delete') {
-      remove($opt[1]);
-    }
   } else if($method['action'] == 'create') {
     save($method);
   } else if($method['action'] == 'edit') {
@@ -105,23 +99,22 @@ function code_to_position($code) {
     return "Executivo de vendas";
 }
 
-function encode($arg_action, $id) {
-  $str = $arg_action . " " . $id;
+function encode($value_to_encode) {
+  $str = $value_to_encode;
   return(base64_encode($str));
 }
 
-function decode($action) {
-  $str = base64_decode($action);
-  $opt = explode(" ", $str);
+function decode($value_encoded) {
+  $value_decoded = base64_decode($value_encoded);
 
-  return $opt;
+  return $value_decoded;
 }
 
 $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
 
-if(array_key_exists('a', $_GET)) {
-  select_action($_GET);
-} else {
+if(isset($_POST['action']))
   select_action($_POST);
-}
+else if(isset($_GET['delete']))
+  remove(decode($_GET['delete']));
+
 ?>
