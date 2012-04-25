@@ -13,23 +13,31 @@
   <h3>Cadastro de entidades</h3>
   <table>
     <tr>
-      <td width="300px">
+      <td width="200px">
         Tipo
       </td>
-      <td width="300px">
+      <td width="200px">
         Razão social
       </td>
-      <td width="300px">
+      <td width="200px">
 	Nome fantasia
+      </td>
+
+      <td width="200px">
+      </td>
+      <td width="200px">
       </td>
     </tr>
     <?php
-      foreach(select_action(NULL) as $register) {
+      if(sizeof(select_action(NULL)) == 0) {
+        echo("<tr><td colspan=4>Nenhum registro encontrado.</td></tr>");
+      } else {
+        foreach(select_action(NULL) as $register) {
     ?>
     <tr>
       <td>
 	<?php
-	  echo($register['type']);
+	  echo(code_to_kind($register['type']));
 	?>
       </td>
       <td>
@@ -44,18 +52,18 @@
       </td>
       <td>
         <?php
-          $encoded = encode('edit', $register['id']);
-          echo("<a href=../controllers/companies.php?a=$encoded>Editar</a>");
+          $encoded = encode($register['id']);
+          echo("<a href=companies_form.php?edit=$encoded>Editar</a>");
         ?>
       </td>
       <td>
 	<?php
-	  $encoded = encode('delete', $register['id']);
-          echo("<a href=../controllers/companies.php?a=$encoded>Excluir</a>");
+	  $encoded = encode($register['id']);
+          echo("<a href=../controllers/companies.php?delete=$encoded>Excluir</a>");
         ?>
       </td>
     </tr>
-    <?php } ?>
+    <?php } } ?>
   </table>
 
   <p><a href="../index.php">Voltar</a></p>

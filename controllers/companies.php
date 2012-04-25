@@ -2,38 +2,53 @@
 include('../db/database.php');
 require_once('../db/conf.php');
 
-function save($post, $database) {
-  $database->stmt->prepare("INSERT INTO companies (type, social_name, fantasy_name) VALUES (?, ?, ?)");
+function save($post) {
+  global $database;
 
-  $database->stmt->bind_param('iss', $database->connection->real_escape_string($post['type']),
-				     $database->connection->real_escape_string($post["social_name"]),
-				     $database->connection->real_escape_string($post["fantasy_name"]));
-  
+  $database->stmt->prepare("INSERT INTO companies (type, social_name, fantasy_name) VALUES (?, ?, ?)");
+  $database->stmt->bind_param('iss', $post['type'],
+    $database->connection->real_escape_string($post["social_name"]),
+    $database->connection->real_escape_string($post["fantasy_name"]));
+
   if($database->stmt->execute()) {
-    // This is not nice, we shuld do it using http.
     header('Location: ../layouts/companies.php');
   } else {
     printf("Ocorreu um erro na inclusão do registro.");
   }
 }
 
-function edit($id, $database) {
-  echo("Oi $id");
+function edit($post) {
+  global $database;
 
+  $database->stmt->prepare("UPDATE companies SET type=?, social_name=?, fantasy_name=? WHERE id=?");
+  $database->stmt->bind_param('issi', $post['type'],
+    $database->connection->real_escape_string($post["social_name"]),
+    $database->connection->real_escape_string($post["fantasy_name"]), $post['id']);
+
+  if($database->stmt->execute()) {
+    // This is not nice, we shuld do it using http.
+    header('Location: ../layouts/companies.php');
+  } else {
+    printf("Ocorreu um erro na edição do registro.");
+  }
 }
 
-function remove($id, $database){
- $database->stmt->prepare("DELETE FROM companies WHERE id = ?");
- $database->stmt->bind_param('i', $id);
+function remove($id) {
+  global $database;
 
- if($database->stmt->execute()){
-   header('Location: ../layouts/goals.php');
- }else{
-   printf("Ocorreu um erro na exclusão do registro.");
- }
+  $database->stmt->prepare("DELETE FROM companies WHERE id = ?");
+  $database->stmt->bind_param('i', $id);
+
+  if($database->stmt->execute()){
+    header('Location: ../layouts/companies.php');
+  }else{
+    printf("Ocorreu um erro na exclusão do registro.");
+  }
 }
 
-function search($post, $database, $argv = false) {
+function search($argv = false) {
+  global $database;
+
   $records = array();
   $query = sprintf("SELECT * FROM companies");
 
@@ -58,40 +73,40 @@ function search($post, $database, $argv = false) {
 }
 
 function select_action($method) {
-  $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
-
   if($method == NULL) {
-    return(search($method, $database));
-  } else if(array_key_exists('a', $method)) {
-    decode($method['a'], $database);
-  } else if(array_key_exists('delete', $method)){
-    decode($method['delete'], $database);
-  } else {
-    if($method['action'] == 'create') {
-      save($method, $database);
-    }
+    return(search($method));
+  } else if($method['action'] == 'create') {
+    save($method);
+  } else if($method['action'] == 'edit') {
+    edit($method);
   }
 }
 
-function encode($arg_action, $id) {
-  $str = $arg_action . " " . $id;
+function encode($value_to_encode) {
+  $str = $value_to_encode;
   return(base64_encode($str));
 }
 
-function decode($action, $database) {
-  $str = base64_decode($action);
-  $opt = explode(" ", $str);
+function decode($value_encoded) {
+  $value_decoded = base64_decode($value_encoded);
 
-  if($opt[0] == 'edit') {
-    edit($opt[1], $database);
-  }else if($opt[0] == 'remove'){
-    remove($opt[1], $database);
-  }
+  return $value_decoded;
 }
 
-if(array_key_exists('a', $_GET)) {
-  select_action($_GET);
-} else {
+function code_to_kind($code) {
+  if($code == 0)
+    return "Cliente";
+  else if($code == 1)
+    return "Agência";
+  else
+    return "Cliente e agência";
+}
+
+$database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
+
+if(isset($_POST['action']))
   select_action($_POST);
-}
+else if(isset($_GET['delete']))
+  remove(decode($_GET['delete']));
+
 ?>
