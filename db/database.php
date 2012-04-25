@@ -86,18 +86,20 @@ class Database {
   
   /* Method that create and execute queries by receiving a value mapping and the type of
    * requested query. Returns the result set of requested query */
-  public function execute_query($type, $mapping){
-    $query = prepare_query($type, $mapping);
+  public function execute_query($type, $mapping, $pkfield){
+    $query = $this->create_query($type, $mapping, $pkfield);
 
   }
 
   private function create_query($type, $mapping, $pkfield){
+    $sql = "asb";
     switch($type){
       case 'I':
         $sql = "INSERT INTO <table> VALUES <value>";
         break;
       case 'S':
         $sql = "SELECT <fields> FROM <table> <search>";
+        printf("aqui..%s\n", $sql);
         break;
       case 'D':
         $sql = "DELETE FROM <table> WHERE <pkfield> = <value>";
@@ -106,8 +108,9 @@ class Database {
         die("Query type not specified or a wrong value has been specified");
     }
     
-    $sql = mapping_interpreter($mapping, $sql, $pkfield);
+    $sql = $this->mapping_interpreter($mapping, $sql, $pkfield);
   
+    printf("$sql\n");
   }
 
   private function mapping_interpreter($mapping, $sql, $pkfield){

@@ -48,7 +48,10 @@
         ?>
       </td>
       <td>
-        <a href="../controllers/sell_types.php">Excluir</a>
+        <?php
+          $encoded = encode('delete', $register['id']);
+          echo("<a href=../controllers/sell_types.php?delete=$encoded>Excluir</a>");
+        ?>
       </td>
     </tr>
     <?php } } ?>

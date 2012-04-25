@@ -79,6 +79,19 @@ function select_action($method) {
   }
 }
 
+function remove($id){
+  global $database;
+
+  $database->stmt->prepare("DELETE FROM sell_types WHERE id = ?");
+  $database->stmt->bind_param('i', $id);
+
+  if($database->stmt->execute()){
+    header("Location: ../layouts/sell_types.php");
+  }else{
+    printf("Ocorreu um erro na exclusão do registro");
+  }
+}
+
 function encode($arg_action, $id) {
   $str = $arg_action . " " . $id;
   return(base64_encode($str));
@@ -98,4 +111,9 @@ if(array_key_exists('a', $_GET)) {
 } else {
   select_action($_POST);
 }
+
+if(isset($_GET["delete"])){
+  remove(decode($_GET["delete"]));
+}
+
 ?>
