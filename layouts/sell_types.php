@@ -43,13 +43,13 @@
       </td>
       <td>
         <?php
-          $encoded = encode('edit', $register['id']);
-          echo("<a href=sell_types_form.php?a=$encoded>Editar</a>");
+          $encoded = encode($register['id']);
+          echo("<a href=sell_types_form.php?edit=$encoded>Editar</a>");
         ?>
       </td>
       <td>
         <?php
-          $encoded = encode('delete', $register['id']);
+          $encoded = encode($register['id']);
           echo("<a href=../controllers/sell_types.php?delete=$encoded>Excluir</a>");
         ?>
       </td>

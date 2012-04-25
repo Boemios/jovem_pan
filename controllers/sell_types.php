@@ -92,28 +92,22 @@ function remove($id){
   }
 }
 
-function encode($arg_action, $id) {
-  $str = $arg_action . " " . $id;
+function encode($value_to_encode) {
+  $str = $value_to_encode;
   return(base64_encode($str));
 }
 
-function decode($action) {
-  $str = base64_decode($action);
-  $opt = explode(" ", $str);
+function decode($value_encoded) {
+  $value_decoded = base64_decode($value_encoded);
 
-  return $opt;
+  return $value_decoded;
 }
 
 $database = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
 
-if(array_key_exists('a', $_GET)) {
-  select_action($_GET);
-} else {
+if(isset($_POST['action']))
   select_action($_POST);
-}
-
-if(isset($_GET["delete"])){
-  remove(decode($_GET["delete"]));
-}
+else if(isset($_GET['delete']))
+  remove(decode($_GET['delete']));
 
 ?>

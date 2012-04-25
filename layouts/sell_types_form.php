@@ -1,14 +1,12 @@
 <?php
 include("../controllers/sell_types.php");
 
-if(array_key_exists('a', $_GET)) {
-  $args = decode($_GET['a']);
-  if($args[0] == 'edit') {
-    $records = recover_to_edit($args[1]);
-    $edit = 1;
-  } else {
-    $edit = 0;
-  }
+if(isset($_GET['edit'])) {
+  $params['id'] = decode($_GET['edit']);
+  $records = search($params);
+  $edit = 1;
+} else {
+  $edit = 0;
 }
 ?>
 
