@@ -16,18 +16,6 @@ function save($post) {
   }
 }
 
-function recover_to_edit($id) {
-  global $database;
-  $argv['id'] = $id;
-  $records = search($argv);
-
-  if(sizeof($records == 1)) {
-    header("Location: ../layouts/employees_form.php");
-  } else {
-    die("A consulta deveria retornar um único resutado mas retornou mais ou menos do que isso.");
-  }
-}
-
 function edit($post) {
   global $database;
 
