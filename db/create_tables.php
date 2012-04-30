@@ -23,7 +23,7 @@ class CreateTables {
     $this->db     = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
     $this->conn   = $this->db->connection;
     $this->tables = array('employees', 'companies', 'sell_types', 'selles', 'contracts',
-                          'contracts_employees', 'goals');
+                          'contracts_employees', 'goals', 'shares');
 
     if(!defined("STDIN")) {
       define("STDIN", fopen('php://stdin', 'r'));
@@ -172,6 +172,16 @@ class CreateTables {
     $query .= "value DECIMAL(10, 4) NOT NULL,";
     $query .= "valid_date DATE NOT NULL,";
     $query .= "PRIMARY KEY(id))";
+
+    return $query;
+  }
+
+  private function query_for_shares(){
+    $query = "create table shares(id INT NOT NULL AUTO_INCREMENT,";
+    $query .= "value DECIMAL(10, 4) NOT NULL,";
+    $query .= "due_date DATE NOT NULL,";
+    $query .= "sell_id INT NOT NULL,";
+    $query .= "PRIMARY KEY(id), FOREIGN KEY(sell_id) REFERENCES selles(id))";
 
     return $query;
   }
