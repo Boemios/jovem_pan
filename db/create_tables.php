@@ -22,7 +22,7 @@ class CreateTables {
   function __construct() {
     $this->db     = new Database(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, "jovempan");
     $this->conn   = $this->db->connection;
-    $this->tables = array('employees', 'companies', 'sell_types', 'selles', 'contracts',
+    $this->tables = array('employees', 'companies', 'sell_types', 'contracts', 'selles',
                           'contracts_employees', 'goals', 'shares');
 
     if(!defined("STDIN")) {
@@ -139,7 +139,7 @@ class CreateTables {
 
   private function query_for_selles() {
     $query = "create table selles (id INT NOT NULL AUTO_INCREMENT,";
-    $query .= " sell_type_id INT NOT NULL, discount_percentage DECIMAL(10, 4) NULL,";
+    $query .= " sell_type_id INT NULL, discount_percentage DECIMAL(10, 4) NULL,";
     $query .= " liquid_value DECIMAL(10, 4) NULL, invoice_total DECIMAL(10, 4) NULL,";
     $query .= " PRIMARY KEY(id), FOREIGN KEY(sell_type_id) REFERENCES sell_types(id) ON";
     $query .= " UPDATE CASCADE ON DELETE SET NULL);";
